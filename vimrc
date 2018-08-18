@@ -1,81 +1,67 @@
 " Initialize:"{{{
 "
+source $VIMRUNTIME/defaults.vim
 
+scriptencoding utf-8
 """"""""""""""""""""""""""""""
 "内部エンコーディングの設定
 """"""""""""""""""""""""""""""
 set encoding=utf-8
 set termencoding=utf-8
 
-
-scriptencoding utf-8
-
 "------------------------------------
 " neobundle.vim
 "------------------------------------
-"filetype plugin indent off     " required!
-
-let g:neobundle#types#git#default_protocol="https"
-
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+if &compatible
+  set nocompatible
 endif
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 
-call neobundle#begin(expand('~/.vim/bundle'))
+call dein#begin(expand('~/.vim/dein'))
 
-" Let NeoBundle manage NeoBundle
-NeoBundleFetch 'Shougo/neobundle.vim'
+call dein#add('Shougo/dein.vim')
 
-" Recommended to install
-" After install, turn shell ~/.vim/bundle/vimproc, (n,g)make -f your_machines_makefile
-NeoBundle 'Shougo/vimproc.vim', {
-      \   'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'linux' : 'make',
-      \     'unix' : 'gmake',
-      \   }
-      \ }
+"call dein#add('Shougo/neocomplete')
+call dein#add('Shougo/neomru.vim')
+call dein#add('Shougo/denite.nvim')
 
-" My Bundles here:
-"
-" original repos on github
-NeoBundle 'Shougo/neocomplete'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/unite-outline'
+call dein#add('lifepillar/vim-solarized8')
+call dein#add('itchyny/lightline.vim')
 
-NeoBundle 'rhysd/unite-codic.vim'
-NeoBundle 'koron/codic-vim'
+call dein#add('thinca/vim-quickrun')
+call dein#add('mattn/sonictemplate-vim')
 
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'bling/vim-airline'
+call dein#add('fatih/vim-go')
 
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'mattn/sonictemplate-vim'
-NeoBundle 'vim-jp/vim-go-extra'
+call dein#add('prabirshrestha/async.vim')
+call dein#add('prabirshrestha/vim-lsp')
+call dein#add('prabirshrestha/asyncomplete.vim')
+call dein#add('prabirshrestha/asyncomplete-lsp.vim')
+call dein#add('prabirshrestha/asyncomplete-gocode.vim')
 
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'cohama/agit.vim'
+"call dein#add('w0rp/ale')
 
-NeoBundle 'ctrlpvim/ctrlp.vim'
+call dein#end()
 
-" Vim-script repositories
-"NeoBundle 'vim-scripts/gtags.vim'
-"NeoBundle 'vim-scripts/taglist.vim'
+filetype plugin indent on
 
-call neobundle#end()
 
-filetype plugin indent on     " required!
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-
-if !has('vim_starting')
-  " Call on_source hook when reloading .vimrc.
-  call neobundle#call_hook('on_source')
+"---------------------------------------------------------------------------
+" Bram氏の提供する設定例をインクルード (別ファイル:vimrc_example.vim)。これ
+" 以前にg:no_vimrc_exampleに非0な値を設定しておけばインクルードはしない。
+if 1 && (!exists('g:no_vimrc_example') || g:no_vimrc_example == 0)
+  if &guioptions !~# "M"
+    " vimrc_example.vimを読み込む時はguioptionsにMフラグをつけて、syntax on
+    " やfiletype plugin onが引き起こすmenu.vimの読み込みを避ける。こうしない
+    " とencに対応するメニューファイルが読み込まれてしまい、これの後で読み込
+    " まれる.vimrcでencが設定された場合にその設定が反映されずメニューが文字
+    " 化けてしまう。
+    set guioptions+=M
+    source $VIMRUNTIME/vimrc_example.vim
+    set guioptions-=M
+  else
+    source $VIMRUNTIME/vimrc_example.vim
+  endif
 endif
 
 "---------------------------------------------------------------------------
@@ -187,11 +173,16 @@ if !has('gui_running')
 " ------------------------------------------------------------------
 " Solarized Colorscheme Config
 " ------------------------------------------------------------------
-  let g:solarized_bold=0    "default value is 1
-  let g:solarized_italic=0  "default value is 1
-  syntax enable
-  set background=dark
-  colorscheme solarized
+"  let g:solarized_bold=0    "default value is 1
+"  let g:solarized_italic=0  "default value is 1
+syntax enable
+set background=dark
+colorscheme solarized8
+
+if has("termguicolors")
+  set termguicolors
+endif
+
 
 " ------------------------------------------------------------------
   " Using the mouse on a terminal
@@ -247,9 +238,6 @@ set grepprg=grep\ -nH
 "endfunction
 "autocmd vimrc BufWritePre * call <SID>remove_dust()
 
-" 保存時にGoFmtを実行する
-autocmd vimrc FileType go autocmd vimrc BufWritePre <buffer> Fmt
-
 "---------------------------------------------------------------------------
 " キーマッピングに関する設定:
 "
@@ -293,129 +281,94 @@ set tags+=./tags;
 " プラグインごとの設定 Plugins
 "-------------------------------------------------------------------------------
 "------------------------------------
-" vim-airline
+" denite.nvim
 "------------------------------------
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-
-let g:airline_theme='powerlineish'
-let g:airline#extensions#whitespace#enabled = 0
-
-" old vim-powerline symbols
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
-
-"------------------------------------
-" vimproc
-"------------------------------------
-
-"------------------------------------
-" unite.vim
-"------------------------------------
-let g:unite_data_directory = $HOME."/.vim/.unite"
-
-" unite.vim"{{{
-" The prefix key.
-nnoremap    [unite]   <Nop>
-xnoremap    [unite]   <Nop>
-nmap    <Leader>f [unite]
-xmap    <Leader>f [unite]
-
-nnoremap <silent> [unite]/  :<C-u>Unite -buffer-name=search line -start-insert -no-quit<CR>
-nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register history/yank<CR>
-nnoremap <silent> [unite]o :<C-u>Unite outline -start-insert<CR>
-nnoremap [unite]f :<C-u>Unite source<CR>
-nnoremap <silent> [unite]t :<C-u>Unite sonictemplate<CR>
-xnoremap <silent> [unite]r d:<C-u>Unite -buffer-name=register register history/yank<CR>
-nnoremap <silent> [unite]w :<C-u>UniteWithCursorWord -buffer-name=register
-      \ buffer file_mru bookmark file<CR>
-nnoremap <silent> [unite]g :<C-u>Unite grep -buffer-name=search -no-quit<CR>
-"nnoremap <silent> [unite]g :<C-u>Unite grep:::<C-R>=escape(@/, '\\.*$^[]')<CR><CR>
-nnoremap <silent> <C-k> :<C-u>Unite change jump<CR>
-nnoremap <silent> [unite]c :<C-u>Unite change<CR>
-nnoremap <silent> [unite]d :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
-nnoremap <silent> [unite]ma :<C-u>Unite mapping<CR>
-nnoremap <silent> [unite]me :<C-u>Unite output:message<CR>
-nnoremap <silent> [unite]mru :<C-u>Unite file_mru<CR>
-" unite-grepのキーマップ
-" 選択した文字列をunite-grep
-" https://github.com/shingokatsushima/dotfiles/blob/master/.vimrc
-vnoremap /g y:Unite grep:::<C-R>=escape(@", '\\.*$^[]')<CR><CR>
-" }}}
+" Change mappings.
+call denite#custom#map(
+      \ 'insert',
+      \ '<C-j>',
+      \ '<denite:move_to_next_line>',
+      \ 'noremap'
+      \)
+call denite#custom#map(
+      \ 'insert',
+      \ '<C-k>',
+      \ '<denite:move_to_previous_line>',
+      \ 'noremap'
+      \)
 
 
-"------------------------------------
-" neocomplete.vim
-"------------------------------------
-let g:neocomplete#data_directory = $HOME."/.vim/.neocomplete"
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+nnoremap    [denite]   <Nop>
+xnoremap    [denite]   <Nop>
+nmap    <Leader>f [denite]
+xmap    <Leader>f [denite]
+call denite#custom#var('file_rec', 'command',
+      \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+call denite#custom#var('grep', 'command', ['ag'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'final_opts', [])
+call denite#custom#var('grep', 'separator', [])
+call denite#custom#var('grep', 'default_opts',
+      \ ['--nocolor', '--nogroup'])
+call denite#custom#source('grep', 'converters', ['converter_abbr_word'])
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-
-" Enable omni completion.
-autocmd vimrc FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd vimrc FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd vimrc FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd vimrc FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd vimrc FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
+nnoremap <silent> <C-k><C-f> :<C-u>Denite file_rec<CR>
+nnoremap <silent> <C-k><C-g> :<C-u>Denite grep<CR>
+nnoremap <silent> <C-k><C-l> :<C-u>Denite line<CR>
+nnoremap <silent> [denite]mru :<C-u>Denite file_mru<CR>
+nnoremap <silent> <C-k><C-y> :<C-u>Denite neoyank<CR>
 
 "------------------------------------
 " quickrun.vim
 "------------------------------------
 let g:quickrun_config = {}
-let g:quickrun_config['*'] = {'runmode': "async:remote:vimproc", 'split': 'below'}
+let g:quickrun_config['*'] = {'runner': "job", 'split': 'below'}
 
 "------------------------------------
-" ctrlp.vim
+" ale
 "------------------------------------
-if executable('ag')
-  let g:ctrlp_use_caching=0
-  let g:ctrlp_user_command='ag %s -i --nocolor --nogroup -g ""'
+"let g:ale_linters = {
+"\   'python': ['pylint', 'pyls'],
+"\   'c': ['clangd'],
+"\   'cpp': ['clangd'],
+"\   'go': ['golint'],
+"\}
+
+"let g:ale_fixers = {
+"\   'c': ['clang-format'],
+"\   'go': ['gofmt'],
+"\}
+
+"------------------------------------
+" vim-lsp
+"------------------------------------
+if executable('clangd')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd']},
+        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+        \ })
 endif
+
+if executable('pyls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
+
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
+
+" for asyncomplete.vim log
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+
+call asyncomplete#register_source(asyncomplete#sources#gocode#get_source_options({
+    \ 'name': 'gocode',
+    \ 'whitelist': ['go'],
+    \ 'completor': function('asyncomplete#sources#gocode#completor'),
+    \ }))
 
