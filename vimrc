@@ -9,6 +9,10 @@ scriptencoding utf-8
 set encoding=utf-8
 set termencoding=utf-8
 
+
+" leaderを,に変更
+let mapleader=","
+
 "------------------------------------
 " neobundle.vim
 "------------------------------------
@@ -17,31 +21,15 @@ if &compatible
 endif
 set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 
-call dein#begin(expand('~/.vim/dein'))
+if dein#load_state('~/.vim/dein')
+    call dein#begin('~/.vim/dein')
 
-call dein#add('Shougo/dein.vim')
+    call dein#load_toml("~/dotfiles/plugin/plugins.toml", {'lazy': 0})
+    call dein#load_toml("~/dotfiles/plugin/lazy.toml",    {'lazy': 1})
 
-"call dein#add('Shougo/neocomplete')
-call dein#add('Shougo/neomru.vim')
-call dein#add('Shougo/denite.nvim')
-
-call dein#add('lifepillar/vim-solarized8')
-call dein#add('itchyny/lightline.vim')
-
-call dein#add('thinca/vim-quickrun')
-call dein#add('mattn/sonictemplate-vim')
-
-call dein#add('fatih/vim-go')
-
-call dein#add('prabirshrestha/async.vim')
-call dein#add('prabirshrestha/vim-lsp')
-call dein#add('prabirshrestha/asyncomplete.vim')
-call dein#add('prabirshrestha/asyncomplete-lsp.vim')
-call dein#add('prabirshrestha/asyncomplete-gocode.vim')
-
-"call dein#add('w0rp/ale')
-
-call dein#end()
+    call dein#end()
+    call dein#save_state()
+endif
 
 filetype plugin indent on
 
@@ -242,8 +230,6 @@ set grepprg=grep\ -nH
 " キーマッピングに関する設定:
 "
 
-" leaderを,に変更
-let mapleader=","
 
 noremap p P
 noremap P p
@@ -277,98 +263,4 @@ cnoremap <C-n> <Down>
 " tagsファイルを検索する際に、カレントバッファから上に辿って探す
 set tags+=./tags;
 
-"-------------------------------------------------------------------------------
-" プラグインごとの設定 Plugins
-"-------------------------------------------------------------------------------
-"------------------------------------
-" denite.nvim
-"------------------------------------
-" Change mappings.
-call denite#custom#map(
-      \ 'insert',
-      \ '<C-j>',
-      \ '<denite:move_to_next_line>',
-      \ 'noremap'
-      \)
-call denite#custom#map(
-      \ 'insert',
-      \ '<C-k>',
-      \ '<denite:move_to_previous_line>',
-      \ 'noremap'
-      \)
-
-
-nnoremap    [denite]   <Nop>
-xnoremap    [denite]   <Nop>
-nmap    <Leader>f [denite]
-xmap    <Leader>f [denite]
-call denite#custom#var('file_rec', 'command',
-      \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-
-call denite#custom#var('grep', 'command', ['ag'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'final_opts', [])
-call denite#custom#var('grep', 'separator', [])
-call denite#custom#var('grep', 'default_opts',
-      \ ['--nocolor', '--nogroup'])
-call denite#custom#source('grep', 'converters', ['converter_abbr_word'])
-
-
-nnoremap <silent> <C-k><C-f> :<C-u>Denite file_rec<CR>
-nnoremap <silent> <C-k><C-g> :<C-u>Denite grep<CR>
-nnoremap <silent> <C-k><C-l> :<C-u>Denite line<CR>
-nnoremap <silent> [denite]mru :<C-u>Denite file_mru<CR>
-nnoremap <silent> <C-k><C-y> :<C-u>Denite neoyank<CR>
-
-"------------------------------------
-" quickrun.vim
-"------------------------------------
-let g:quickrun_config = {}
-let g:quickrun_config['*'] = {'runner': "job", 'split': 'below'}
-
-"------------------------------------
-" ale
-"------------------------------------
-"let g:ale_linters = {
-"\   'python': ['pylint', 'pyls'],
-"\   'c': ['clangd'],
-"\   'cpp': ['clangd'],
-"\   'go': ['golint'],
-"\}
-
-"let g:ale_fixers = {
-"\   'c': ['clang-format'],
-"\   'go': ['gofmt'],
-"\}
-
-"------------------------------------
-" vim-lsp
-"------------------------------------
-if executable('clangd')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd']},
-        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-        \ })
-endif
-
-if executable('pyls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
-
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('~/vim-lsp.log')
-
-" for asyncomplete.vim log
-let g:asyncomplete_log_file = expand('~/asyncomplete.log')
-
-call asyncomplete#register_source(asyncomplete#sources#gocode#get_source_options({
-    \ 'name': 'gocode',
-    \ 'whitelist': ['go'],
-    \ 'completor': function('asyncomplete#sources#gocode#completor'),
-    \ }))
 
