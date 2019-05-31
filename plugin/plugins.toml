@@ -6,13 +6,54 @@ repo = 'haya14busa/dein-command.vim'
 
 [[plugins]]
 repo = 'lifepillar/vim-solarized8'
+hook_add = '''
+  colorscheme solarized8_flat
+  if has("termguicolors")
+    set termguicolors
+  endif
+'''
+
+[[plugins]]
+repo = 'haya14busa/vim-poweryank'
+hook_add = '''
+  map <Leader>y <Plug>(operator-poweryank-osc52)
+'''
 
 [[plugins]]
 repo = 'itchyny/lightline.vim'
+hook_add = '''
+  let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'inactive': {
+          \ 'left': [ [ 'filepath' ] ]
+              \ },
+      \ 'component_function':{
+          \ 'filepath': 'FilePath'
+              \ }
+      \ }
+
+  function! FilePath()
+      if winwidth(0) > 90
+          return expand("%:p:~")
+      else
+          return expand("%:t")
+      endif
+  endfunction
+'''
+
 
 
 [[plugins]]
-repo = 'Shougo/neomru.vim'
+repo = 'thinca/vim-quickrun'
+hook_add = '''
+  let g:quickrun_config = {}
+  let g:quickrun_config.python = {'command': 'python3'}
+  let g:quickrun_config.c = {'cmdopt': '-lm'}
+"  let g:quickrun_config['*'] = {'runner': "job", 'split': 'below'}
+'''
+
+[[plugins]]
+repo = 'mattn/sonictemplate-vim'
 
 [[plugins]]
 repo = 'roxma/nvim-yarp'
@@ -20,56 +61,18 @@ repo = 'roxma/nvim-yarp'
 [[plugins]]
 repo = 'roxma/vim-hug-neovim-rpc'
 
-
 [[plugins]]
-repo = 'Shougo/denite.nvim'
+repo = 'autozimu/LanguageClient-neovim'
+build = 'bash install.sh'
+rev = 'next'
 hook_add = '''
-  nnoremap    [denite]   <Nop>
-  xnoremap    [denite]   <Nop>
-  nmap    <Leader>f [denite]
-  xmap    <Leader>f [denite]
-
-  nnoremap <silent> [denite]mru :<C-u>Denite file_mru<CR>
-
-  nnoremap <silent> <C-k><C-f> :<C-u>Denite file_rec<CR>
-  nnoremap <silent> <C-k><C-g> :<C-u>Denite grep<CR>
-  nnoremap <silent> <C-k><C-l> :<C-u>Denite line<CR>
-  nnoremap <silent> <C-k><C-y> :<C-u>Denite neoyank<CR>
-
-  call denite#custom#map(
-        \ 'insert',
-        \ '<C-j>',
-        \ '<denite:move_to_next_line>',
-        \ 'noremap'
-        \)
-  call denite#custom#map(
-        \ 'insert',
-        \ '<C-k>',
-        \ '<denite:move_to_previous_line>',
-        \ 'noremap'
-        \)
-
-  call denite#custom#var('file_rec', 'command',
-        \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-
-  call denite#custom#var('grep', 'command', ['ag'])
-  call denite#custom#var('grep', 'recursive_opts', [])
-  call denite#custom#var('grep', 'final_opts', [])
-  call denite#custom#var('grep', 'separator', [])
-  call denite#custom#var('grep', 'default_opts',
-        \ ['--nocolor', '--nogroup'])
-  call denite#custom#source('grep', 'converters', ['converter_abbr_word'])
+"set hidden
+let g:LanguageClient_serverCommands = {
+"  \ 'c'  : ['clangd'],
+"  \ 'cpp': ['clangd'],
+   \ 'python': ['pyls'],
+  \ 'rust': ['~/.cargo/bin/rls']
+  \ }
+let g:LanguageClient_diagnosticsEnable=0
 '''
-
-[[plugins]]
-repo = 'thinca/vim-quickrun'
-hook_add = '''
-  let g:quickrun_config = {}
-  let g:quickrun_config.python = {'command': 'python3'}
-  let g:quickrun_config['*'] = {'runner': "job", 'split': 'below'}
-'''
-
-[[plugins]]
-repo = 'mattn/sonictemplate-vim'
-
 

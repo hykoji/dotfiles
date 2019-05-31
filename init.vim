@@ -1,6 +1,5 @@
 " Initialize:"{{{
 "
-source $VIMRUNTIME/defaults.vim
 
 language ja_JP.utf8
 
@@ -30,13 +29,13 @@ let mapleader=","
 if &compatible
   set nocompatible
 endif
-set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
-if dein#load_state('~/.vim/dein')
-    call dein#begin('~/.vim/dein')
+if dein#load_state('~/.cache/dein')
+    call dein#begin('~/.cache/dein')
 
-    call dein#load_toml("~/dotfiles/plugin/plugins.toml", {'lazy': 0})
-    call dein#load_toml("~/dotfiles/plugin/lazy.toml",    {'lazy': 1})
+    call dein#load_toml("~/.config/nvim/plugin/plugins.toml", {'lazy': 0})
+    call dein#load_toml("~/.config/nvim/plugin/lazy.toml",    {'lazy': 1})
 
     call dein#end()
     call dein#save_state()
@@ -102,9 +101,11 @@ augroup vimrc_group_formatoptions
 	autocmd FileType * setlocal formatoptions-=ro
 augroup END
 
-set undodir= "~/.vim/undo"
+set undodir= "~/.cache/nvim/undo"
 
 " set virtualedit=block
+
+set mouse=nv
 
 "---------------------------------------------------------------------------
 " GUI固有ではない画面表示の設定:
@@ -122,7 +123,7 @@ set listchars=tab:^.,trail:_,extends:>,precedes:<
 " 長い行を折り返して表示 (nowrap:折り返さない)
 set nowrap
 " コマンドラインの高さ (Windows用gvim使用時はgvimrcを編集すること)
-set cmdheight=2
+set cmdheight=1
 " コマンドをステータス行に表示
 "set showcmd
 " タイトルを表示
@@ -135,7 +136,7 @@ set shortmess=aTI
 set showfulltag
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
-
+"set wildoptions+=pum
 
 "全角スペースを表示 {{{
 "http://sites.google.com/site/fudist/Home/vim-nihongo-ban/vim-color
@@ -160,24 +161,18 @@ endif
 " }}}
 
 "---------------------------------------------------------------------------
-" マウスに関する設定:
-"
-" ターミナルでマウスを使用できるようにする
-set ttymouse=sgr
-
-"---------------------------------------------------------------------------
 " ファイル操作に関する設定:
 "
 " バックアップファイルを作成しない (次行の先頭の " を削除すれば有効になる)
 "set nobackup
 set backup
-set backupdir=~/.vim/backup
+set backupdir=~/.cache/nvim/backup
 
 " スワップファイル作らない
 set noswapfile
 
 " UNDOファイルフォルダ設定
-set undodir=~/.vim/undo
+set undodir=~/.cache/nvim/undo
 set undofile
 
 "ファイル保存の初期ディレクトリをバッファファイル位置に設定
@@ -190,8 +185,8 @@ augroup group_vimrc_cd
 augroup END
 
 " 自動的にクリップボードへ
-set clipboard=unnamed,autoselect
-set clipboard=unnamedplus
+"set clipboard=unnamed,autoselect
+"set clipboard=unnamedplus
 
 " クリップボードからペーストする時だけインデントしないよう
 if &term =~ "xterm"
