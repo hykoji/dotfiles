@@ -1,8 +1,8 @@
 " Initialize:"{{{
 "
-source $VIMRUNTIME/defaults.vim
+"source $VIMRUNTIME/defaults.vim
 
-language ja_JP.utf8
+"language ja_JP.utf8
 
 scriptencoding utf-8
 set encoding=utf-8
@@ -30,13 +30,14 @@ let mapleader=","
 if &compatible
   set nocompatible
 endif
-set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=~/.config/dein/repos/github.com/Shougo/dein.vim
 
-if dein#load_state('~/.vim/dein')
-    call dein#begin('~/.vim/dein')
+if dein#load_state('~/.config/dein')
+    call dein#begin('~/.config/dein')
 
-    call dein#load_toml("~/dotfiles/plugin/plugins.toml", {'lazy': 0})
-    call dein#load_toml("~/dotfiles/plugin/lazy.toml",    {'lazy': 1})
+"    call dein#load_toml("~/.config/dein/plugin/plugins.toml", {'lazy': 0})
+    call dein#load_toml("~/.config/dein/plugin/plugins_coc.toml", {'lazy': 0})
+"    call dein#load_toml("~/.config/dein/plugin/lazy.toml",    {'lazy': 1})
 
     call dein#end()
     call dein#save_state()
@@ -77,6 +78,7 @@ set matchtime=0
 
 " バックスペースでインデントや改行を削除できるようにする
 "set backspace=2
+set backspace=indent,eol,start
 
 " 検索の挙動に関する設定:
 "
@@ -112,7 +114,7 @@ set undodir= "~/.vim/undo"
 " 行番号を非表示 (number:表示)
 set number
 " カーソルラインをハイライト
-"set cursorline
+set cursorline
 " ルーラーを表示 (noruler:非表示)
 "set ruler
 " タブや改行を表示 (list:表示)
@@ -122,7 +124,7 @@ set listchars=tab:^.,trail:_,extends:>,precedes:<
 " 長い行を折り返して表示 (nowrap:折り返さない)
 set nowrap
 " コマンドラインの高さ (Windows用gvim使用時はgvimrcを編集すること)
-set cmdheight=2
+set cmdheight=1
 " コマンドをステータス行に表示
 "set showcmd
 " タイトルを表示
@@ -163,6 +165,7 @@ endif
 " マウスに関する設定:
 "
 " ターミナルでマウスを使用できるようにする
+set mouse=a
 set ttymouse=sgr
 
 "---------------------------------------------------------------------------
@@ -190,8 +193,9 @@ augroup group_vimrc_cd
 augroup END
 
 " 自動的にクリップボードへ
-set clipboard=unnamed,autoselect
-set clipboard=unnamedplus
+set clipboard=unnamed
+"set clipboard=unnamed,autoselect
+"set clipboard=unnamedplus
 
 " クリップボードからペーストする時だけインデントしないよう
 if &term =~ "xterm"
@@ -261,5 +265,4 @@ set diffopt+=vertical
 "-------------------------------------------------------------------------------
 " tagsファイルを検索する際に、カレントバッファから上に辿って探す
 set tags+=./tags;
-
 

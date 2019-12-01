@@ -1,0 +1,94 @@
+
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'haya14busa/dein-command.vim'
+
+[[plugins]]
+repo = 'lifepillar/vim-solarized8'
+hook_add = '''
+  colorscheme solarized8_flat
+  set background=dark
+  if has("termguicolors")
+    set termguicolors
+  endif
+'''
+
+[[plugins]]
+repo = 'haya14busa/vim-poweryank'
+hook_add = '''
+  map <Leader>y <Plug>(operator-poweryank-osc52)
+'''
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+let g:lightline = {
+    \ 'colorscheme': 'wombat',
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+    \ },
+    \ 'inactive': {
+    \ 'left': [ [ 'filepath' ] ]
+    \ },
+    \ 'component_function':{
+    \   'filepath': 'FilePath',
+    \   'cocstatus': 'coc#status',
+    \   'currentfunction': 'CocCurrentFunction'
+    \ }
+    \ }
+
+function! FilePath()
+    if winwidth(0) > 90
+    return expand("%:p:~")
+    else
+    return expand("%:t")
+    endif
+    endfunction
+    '''
+
+
+
+[[plugins]]
+repo = 'thinca/vim-quickrun'
+hook_add = '''
+  let g:quickrun_config = {}
+  let g:quickrun_config.python = {'command': 'python3'}
+  let g:quickrun_config.c = {'cmdopt': '-lm'}
+"  let g:quickrun_config['*'] = {'runner': "job", 'split': 'below'}
+'''
+
+[[plugins]]
+repo = 'mattn/sonictemplate-vim'
+
+# curl -sL install-node.now.sh/lts | bash -s -- --prefix=$HOME/opt/nodejs
+[[plugins]]
+repo = 'neoclide/coc.nvim'
+merged = '0'
+rev = 'release'
+#build= 'yarn install --frozen-lockfile'
+
+hook_add = '''
+  let g:coc_node_path = $HOME.'/opt/nodejs/bin/node'
+
+  nnoremap    [Coc]   <Nop>
+  xnoremap    [Coc]   <Nop>
+  nmap    <Leader>f [Coc]
+  xmap    <Leader>f [Coc]
+
+  nnoremap <silent> [Coc]mru :<C-u>CocList mru<CR>
+
+  "スペースhでHover
+ nmap <silent> <leader>h :<C-u>call CocAction('doHover')<cr>
+  "スペースdfでDefinition
+  nmap <silent> <leader>df <Plug>(coc-definition)
+  "スペースrfでReferences
+  nmap <silent> <leader>rf <Plug>(coc-references)
+  "スペースrnでRename
+   nmap <silent> <leader>rn <Plug>(coc-rename)
+  "スペースfmtでFormat
+  nmap <silent> <leader>fmt <Plug>(coc-format)
+'''
+
