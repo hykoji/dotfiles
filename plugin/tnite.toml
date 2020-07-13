@@ -1,0 +1,61 @@
+[[plugins]]
+repo = 'airblade/vim-rooter'
+hook_add = '''
+    let g:rooter_manual_only = 1
+'''
+
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+hook_add = '''
+  let g:neomru#file_mru_path = $HOME."/.vim/.neomru/file"
+  let g:neomru#directory_mru_path = $HOME."/.vim/.neomru/directory"
+'''
+
+[[plugins]]
+repo = 'pocke/tnite.vim'
+hook_add = '''
+  nnoremap    [tnite]   <Nop>
+  xnoremap    [tnite]   <Nop>
+  nmap    <Leader>f [tnite]
+  xmap    <Leader>f [tnite]
+
+  " MRU
+  nnoremap <silent>[tnite]mru :<C-u>call tnite#start(["sh", "-c", "sed \"1d\" $HOME/.vim/.neomru/file \| peco --initial-filter Fuzzy"], "edit", {})<CR>
+
+  " Search FileList"
+  nnoremap <silent>[tnite]r :<C-u>call tnite#start(
+\         ["sh", "-c", "ag --follow --nocolor --nogroup -g . " . shellescape(FindRootDirectory() ) . "  \| peco --initial-filter Fuzzy"],
+\         "edit",
+\         {})<CR>
+
+
+  " Grep with word under the cursor.
+  nnoremap <silent>[tnite]cg :<C-u>call tnite#start(
+\         ["sh", "-c", "rg --vimgrep " . shellescape(expand('<cword>')) . " " . shellescape(FindRootDirectory() ) . "  \| peco --initial-filter Fuzzy \| cut -d : -f 1,2"],
+\         "edit",
+\         {"jump_to_line": v:true })<CR>
+
+  " Grep
+  nnoremap <silent>[tnite]lg :<C-u>call tnite#start(
+\         ["sh", "-c", "rg --vimgrep " . shellescape(tnite#read_from_prompt("grep pattern> ")) . "  \| peco --initial-filter Fuzzy \| cut -d : -f 1,2"],
+\         "edit",
+\         {"jump_to_line": v:true })<CR>
+
+  " Grep
+  nnoremap <silent>[tnite]g :<C-u>call tnite#start(
+\         ["sh", "-c", "rg --vimgrep " . shellescape(tnite#read_from_prompt("grep pattern> ")) . " " . shellescape(FindRootDirectory() ) . "  \| peco --initial-filter Fuzzy \| cut -d : -f 1,2"],
+\         "edit",
+\         {"jump_to_line": v:true })<CR>
+
+" Find a file from git with peco, and open it in a new tab.
+" nnoremap <silent><Space>f :<C-u>call tnite#start(["sh", "-c", "git ls-files \| peco --initial-filter Fuzzy"], "tabedit", {})<CR>
+
+" Grep with word under the cursor.
+" nnoremap <silent><Space>g :<C-u>call tnite#start(["sh", "-c", "git grep --line-number " . shellescape(expand('<cword>')) . " \| peco --initial-filter Fuzzy \| cut -d : -f 1,2"], "tabedit", { "jump-to_line": v:true })
+
+" Grep the current buffer and jump to the specified line.
+" nnoremap <silent><Space>j :<C-u>call tnite#start(["sh", "-c", "nl -b a -w1 -s ':\t' " . shellescape(expand('%:p')) . "\| peco \| cut -d : -f 1"], "jump", {})'
+'''
+
+
+
